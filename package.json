@@ -2,7 +2,7 @@
   "name": "solana-token-explorer",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://aqualsol.ink",
+  "homepage": "https://intaged.github.io/waqua",
   "dependencies": {
     "@react-three/drei": "^9.99.0",
     "@react-three/fiber": "^8.15.16",
