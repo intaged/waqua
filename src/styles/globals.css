@@ -1,0 +1,78 @@
+:root {
+  --deep-ocean: #001B3D;
+  --ocean-surface: #0A4D68;
+  --aquamarine: #00FFCA;
+  --coral: #FF6B6B;
+  --seafoam: #7FFFD4;
+  --wave-highlight: rgba(0, 255, 202, 0.1);
+}
+
+@keyframes wave {
+  0% { transform: translateX(0) translateY(0) rotate(0); }
+  50% { transform: translateX(-25%) translateY(2%) rotate(1deg); }
+  100% { transform: translateX(0) translateY(0) rotate(0); }
+}
+
+@keyframes float {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -1000px 0; }
+  100% { background-position: 1000px 0; }
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 2rem; /* Adds padding to account for any fixed headers */
+}
+
+/* For Safari compatibility */
+@supports (-webkit-overflow-scrolling: touch) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', sans-serif;
+  background: linear-gradient(135deg, var(--deep-ocean) 0%, var(--ocean-surface) 100%);
+  color: #fff;
+  overflow-x: hidden;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 255, 202, 0.05);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 255, 202, 0.2);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 255, 202, 0.3);
+}
+
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(0, 255, 202, 0.1) 50%,
+    transparent 100%
+  );
+  background-size: 1000px 100%;
+  animation: shimmer 3s infinite linear;
+} 
