@@ -2,7 +2,7 @@
   "name": "solana-token-explorer",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://aqua.sol",
+  "homepage": "https://intaged.github.io/waqua",
   "dependencies": {
     "@react-three/drei": "^9.99.0",
     "@react-three/fiber": "^8.15.16",
@@ -48,6 +48,6 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
-    "gh-pages": "^6.3.0"
+    "gh-pages": "^6.1.1"
   }
 }
