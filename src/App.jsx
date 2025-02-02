@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import Layout from './components/Layout';
 import HeroSection from './components/HeroSection';
 import AboutSection from './components/AboutSection';
@@ -16,8 +16,8 @@ const DashboardSection = styled.section`
 `;
 
 const MainContent = styled(motion.div)`
-  opacity: ${props => props.show ? 1 : 0};
-  transition: opacity 1s ease;
+  min-height: 100vh;
+  background: linear-gradient(135deg, var(--deep-ocean) 0%, var(--ocean-surface) 100%);
 `;
 
 function App() {
@@ -44,18 +44,24 @@ function App() {
   }, []);
 
   const handleLoadingComplete = () => {
-    setShowLoadingScreen(false);
-    window.scrollTo(0, 0);
+    if (!loading) {
+      setShowLoadingScreen(false);
+      window.scrollTo(0, 0);
+    }
   };
 
-  if (loading) return null;
-
   return (
-    <>
+    <AnimatePresence mode="wait">
       {showLoadingScreen ? (
-        <LoadingScreen onComplete={handleLoadingComplete} />
+        <LoadingScreen key="loading" onComplete={handleLoadingComplete} />
       ) : (
-        <MainContent show={!showLoadingScreen}>
+        <MainContent
+          key="main"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.5 }}
+        >
           <Layout>
             <HeroSection />
             <AboutSection />
@@ -66,7 +72,7 @@ function App() {
           </Layout>
         </MainContent>
       )}
-    </>
+    </AnimatePresence>
   );
 }
 

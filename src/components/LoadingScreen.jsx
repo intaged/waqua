@@ -116,7 +116,7 @@ const LoadingScreen = ({ onComplete }) => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowBrand(true);
-    }, 3000); // Adjust this timing based on your animation duration
+    }, 2000); // Reduced from 3000 to 2000 for faster response
 
     return () => clearTimeout(timer);
   }, []);
@@ -125,7 +125,7 @@ const LoadingScreen = ({ onComplete }) => {
     setAnimationComplete(true);
     setTimeout(() => {
       onComplete();
-    }, 1000);
+    }, 500); // Reduced from 1000 to 500 for faster transition
   };
 
   return (
@@ -134,12 +134,12 @@ const LoadingScreen = ({ onComplete }) => {
         <LoadingContainer
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 1 }}
+          transition={{ duration: 0.5 }} // Reduced from 1 to 0.5
         >
           <LottieWrapper
             initial={{ opacity: 1 }}
             animate={{ opacity: showBrand ? 0 : 1 }}
-            transition={{ duration: 1 }}
+            transition={{ duration: 0.5 }} // Reduced from 1 to 0.5
           >
             <Lottie
               animationData={animationData}
@@ -153,14 +153,14 @@ const LoadingScreen = ({ onComplete }) => {
               <BrandText
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 1, delay: 0.5 }}
+                transition={{ duration: 0.5, delay: 0.2 }} // Reduced durations
               >
                 $AQUA
               </BrandText>
               <EnterButton
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 1, delay: 1 }}
+                transition={{ duration: 0.5, delay: 0.4 }} // Reduced durations
                 onClick={handleEnterClick}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}

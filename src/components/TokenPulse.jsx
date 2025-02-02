@@ -294,7 +294,7 @@ const TopBadge = styled.div`
   z-index: 2;
 `;
 
-const TokenPulse = ({ tokens }) => {
+const TokenPulse = ({ tokens = [] }) => {
   const [selectedTimeframe, setSelectedTimeframe] = useState('24h');
   const [graduatedTimeframe, setGraduatedTimeframe] = useState('24h');
   
@@ -305,11 +305,12 @@ const TokenPulse = ({ tokens }) => {
   ];
 
   const [isLoading, setIsLoading] = useState(false);
-  const [activeTimeframeIndex, setActiveTimeframeIndex] = useState(2); // Default to 24h (index 2)
+  const [activeTimeframeIndex, setActiveTimeframeIndex] = useState(2);
 
-  // Memoize the token filtering and sorting logic
   const { graduatedTokens, trendingTokens } = useMemo(() => {
-    if (!Array.isArray(tokens)) return { graduatedTokens: [], trendingTokens: [] };
+    if (!Array.isArray(tokens) || tokens.length === 0) {
+      return { graduatedTokens: [], trendingTokens: [] };
+    }
 
     // Create a Set to track unique token addresses
     const processedTokens = new Set();
@@ -353,27 +354,16 @@ const TokenPulse = ({ tokens }) => {
       graduatedWithPlaceholders.push(null);
     }
 
-    // For trending tokens, sort by transaction volume and price impact
+    // For trending tokens, sort by 24h volume and price change
     const trending = validTokens
-      .filter(token => {
-        const liquidityUsd = token.pools[0]?.liquidity?.usd || 0;
-        return (
-          liquidityUsd >= 10000 && // Minimum liquidity for trending
-          !token.risk?.rugged && // Exclude rugged tokens
-          token.pools[0]?.price?.usd > 0 // Ensure token has a valid price
-        );
-      })
+      .filter(token => !graduated.includes(token)) // Exclude graduated tokens
       .sort((a, b) => {
-        const aTxns = (a.buys || 0) + (a.sells || 0);
-        const bTxns = (b.buys || 0) + (b.sells || 0);
-        const aChange = Math.abs(a.events?.[selectedTimeframe]?.priceChangePercentage || 0);
-        const bChange = Math.abs(b.events?.[selectedTimeframe]?.priceChangePercentage || 0);
-        // Combine transaction count and price impact for trending score
-        const trendingScoreDiff = (bTxns * bChange) - (aTxns * aChange);
-        if (trendingScoreDiff !== 0) return trendingScoreDiff;
+        const aChange = Math.abs(a.events['24h']?.priceChangePercentage || 0);
+        const bChange = Math.abs(b.events['24h']?.priceChangePercentage || 0);
+        const volumeDiff = (b.pools[0]?.volume?.['24h']?.usd || 0) - (a.pools[0]?.volume?.['24h']?.usd || 0);
         
-        // Secondary sort by market cap
-        return (b.pools[0]?.marketCap?.usd || 0) - (a.pools[0]?.marketCap?.usd || 0);
+        // Combine price change and volume for ranking
+        return (bChange * 0.7 + volumeDiff * 0.3) - (aChange * 0.7 + volumeDiff * 0.3);
       })
       .slice(0, 6);
 
@@ -387,7 +377,7 @@ const TokenPulse = ({ tokens }) => {
       graduatedTokens: graduatedWithPlaceholders, 
       trendingTokens: trendingWithPlaceholders 
     };
-  }, [tokens, selectedTimeframe]);
+  }, [tokens]);
 
   // Memoize the formatNumber function
   const formatNumber = useCallback((num) => {
